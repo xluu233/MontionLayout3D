@@ -1,0 +1,2 @@
+rootProject.name = "MontionLayout3D"
+include ':app'
