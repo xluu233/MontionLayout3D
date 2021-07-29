@@ -2,17 +2,14 @@ package com.example.montionlayout3d
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.montionlayout3d.ui.main.MainFragment
+import com.example.montionlayout3d.ui.MotionFragment
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.container, MainFragment.newInstance())
-                .commitNow()
-        }
+
+        SensorUtil.initSensor(this)
     }
 }

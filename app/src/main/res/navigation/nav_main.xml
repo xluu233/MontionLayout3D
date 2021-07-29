@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.montionlayout3d.ui.MainFragment"
+        android:label="MainFragment" >
+        <action
+            android:id="@+id/action_mainFragment_to_motionFragment"
+            app:destination="@id/motionFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_viewFragment"
+            app:destination="@id/viewFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/motionFragment"
+        android:name="com.example.montionlayout3d.ui.MotionFragment"
+        android:label="MotionFragment" />
+    <fragment
+        android:id="@+id/viewFragment"
+        android:name="com.example.montionlayout3d.ui.ViewFragment"
+        android:label="ViewFragment" />
+
+
+</navigation>
