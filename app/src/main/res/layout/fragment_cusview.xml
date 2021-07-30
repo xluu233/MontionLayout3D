@@ -1,6 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:circle="http://schemas.android.com/apk/res-auto"
+    xmlns:layout3d="http://schemas.android.com/apk/res-auto"
+    >
+
+
+    <com.example.montionlayout3d.view.Layout3D
+        android:id="@+id/vg3D"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:background="@color/titi"
+        app:TopLayer="@drawable/circle"
+        app:MiddleLayer="@drawable/star1"
+        app:BottomLayer="@drawable/back"
+        layout3d:MiddleLayerTop="30dp"
+        layout3d:MiddleLayerBottom="70dp"
+        layout3d:MiddleLayerLeft="300dp"
+        layout3d:MiddleLayerRight="340dp"
+
+        layout3d:TopLayerTop="50dp"
+        layout3d:TopLayerBottom="200dp"
+        layout3d:TopLayerLeft="20dp"
+        layout3d:TopLayerRight="170dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <!--
+        layout3d:MiddleLayer="@drawable/star1"
+        layout3d:BottomLayer="@drawable/back"
+        -->
+<!--    <com.example.montionlayout3d.view.Circle
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="24dp"
+        android:background="@color/purple_200"
+        circle:alpha_c="101"
+        circle:radius_c="50dp"
+        circle:color_c="@color/teal_200"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/vg3D" />-->
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,6 +10,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
-        SensorUtil.initSensor(this)
+        //SensorUtil.initSensor(this)
     }
 }

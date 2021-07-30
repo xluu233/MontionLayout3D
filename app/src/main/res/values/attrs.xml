@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <declare-styleable name="layout3d">
+        <!--上中下层资源文件-->
+        <attr name="TopLayer" format="reference" />
+        <attr name="MiddleLayer" format="reference" />
+        <attr name="BottomLayer" format="reference" />
+
+        <!--上中下层滑动距离-->
+        <attr name="TopSlide" format="dimension"/>
+        <attr name="MiddleSlide" format="dimension"/>
+        <attr name="BottomSlide" format="dimension"/>
+
+        <!--上中下层是否滑动-->
+        <attr name="TopSlidingEnable" format="boolean"/>
+        <attr name="MiddleSlidingEnable" format="boolean"/>
+        <attr name="BottomSlidingEnable" format="boolean"/>
+
+
+        <!--中层图片资源坐标设置-->
+        <attr name="MiddleLayerTop" format="dimension"/>
+        <attr name="MiddleLayerBottom" format="dimension"/>
+        <attr name="MiddleLayerLeft" format="dimension"/>
+        <attr name="MiddleLayerRight" format="dimension"/>
+
+        <!--上层图片资源坐标设置-->
+        <attr name="TopLayerTop" format="dimension"/>
+        <attr name="TopLayerBottom" format="dimension"/>
+        <attr name="TopLayerLeft" format="dimension"/>
+        <attr name="TopLayerRight" format="dimension"/>
+
+    </declare-styleable>
+
+
+    <declare-styleable name="circle">
+        <attr name="radius_c" format="dimension" />
+        <attr name="color_c" format="color" />
+        <attr name="alpha_c" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="MyEnumStyle">
+        <attr name="fubar">
+            <enum name="FirstEnum" value="0"/>
+            <enum name="SecondEnum" value="1"/>
+            <enum name="ThirdEnum" value="2"/>
+            <enum name="FourthEnum" value="3"/>
+        </attr>
+    </declare-styleable>
+
+</resources>

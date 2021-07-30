@@ -71,12 +71,12 @@ object SensorUtil {
 
         // 重力传感器
         val acceleSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-        sensorManager.registerListener(listener, acceleSensor, SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager.registerListener(listener, acceleSensor, SensorManager.SENSOR_DELAY_GAME)
 
 
         // 地磁场传感器
         val magneticSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
-        sensorManager.registerListener(listener, magneticSensor, SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager.registerListener(listener, magneticSensor, SensorManager.SENSOR_DELAY_GAME)
     }
 
 
