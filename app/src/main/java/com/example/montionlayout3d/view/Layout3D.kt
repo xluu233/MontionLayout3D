@@ -16,7 +16,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import com.example.montionlayout3d.R
-import java.math.BigDecimal
+import kotlin.math.abs
 
 
 /**
@@ -34,27 +34,27 @@ class Layout3D : View {
     }
 
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(
-        context,
-        attrs,
-        defStyleAttr
+            context,
+            attrs,
+            defStyleAttr
     ) {
         init(attrs)
     }
 
     val Int.sp get() = TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_SP,
-        this.toFloat(),
-        context.resources.displayMetrics
+            TypedValue.COMPLEX_UNIT_SP,
+            this.toFloat(),
+            context.resources.displayMetrics
     )
     val Float.dp get() = TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP,
-        this,
-        context.resources.displayMetrics
+            TypedValue.COMPLEX_UNIT_DIP,
+            this,
+            context.resources.displayMetrics
     )
     val Int.dp get() = TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP,
-        this.toFloat(),
-        context.resources.displayMetrics
+            TypedValue.COMPLEX_UNIT_DIP,
+            this.toFloat(),
+            context.resources.displayMetrics
     )
 
     companion object{
@@ -65,6 +65,10 @@ class Layout3D : View {
         fun log(msg: String){
             if (showLog) Log.d(TAG, msg)
         }
+
+        var lastX = 0
+        var lastY = 0
+        var lastZ = 0
     }
 
 
@@ -135,13 +139,13 @@ class Layout3D : View {
 
         middleTop = mTypedArray.getDimension(R.styleable.layout3d_MiddleLayerTop, 0f).toInt()
         middleBottom = mTypedArray.getDimension(
-            R.styleable.layout3d_MiddleLayerBottom,
-            0f
+                R.styleable.layout3d_MiddleLayerBottom,
+                0f
         ).toInt()
         middleLeft = mTypedArray.getDimension(R.styleable.layout3d_MiddleLayerLeft, 0f).toInt()
         middleRight = mTypedArray.getDimension(
-            R.styleable.layout3d_MiddleLayerRight,
-            0f
+                R.styleable.layout3d_MiddleLayerRight,
+                0f
         ).toInt()
         log("middle-margin,top:${middleTop},bottom:$middleBottom,left:${middleLeft},right:${middleRight}")
 
@@ -175,7 +179,7 @@ class Layout3D : View {
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         if (canvas==null) return
-        log("onDraw")
+        //log("onDraw")
 
         bottomDrawable?.let {
             //设置位图左上角坐标（前两个参数）和绘制在View上的位图的宽度和高度（后两个参数）
@@ -195,6 +199,7 @@ class Layout3D : View {
             it.draw(canvas)
         }
 
+        log("onDraw,x:${this.x},y:${this.y},scrollX:${this.scrollX},scrollY:${this.scrollY}")
     }
 
 
@@ -217,14 +222,13 @@ class Layout3D : View {
     }
 
 
-
     private var mAcceleValues : FloatArray ?= null
     private var mMageneticValues : FloatArray ?= null
     private val listener = object : SensorEventListener {
         override fun onSensorChanged(event: SensorEvent?) {
-            //Log.d("onSensorChanged",event.toString())
             if (event?.sensor?.type == Sensor.TYPE_ACCELEROMETER) {
                 mAcceleValues = event.values
+                //log("x:${event.values[0]},y:${event.values[1]},z:${event.values[2]}")
             }
             if (event?.sensor?.type == Sensor.TYPE_MAGNETIC_FIELD) {
                 mMageneticValues = event.values
@@ -236,18 +240,24 @@ class Layout3D : View {
             SensorManager.getRotationMatrix(R, null, mAcceleValues, mMageneticValues);
             SensorManager.getOrientation(R, values);
 
-            val z = values[0].toDouble()
+            //val z = values[0].toDouble()
             // x轴的偏转角度
-            val x = values[1].toDouble()
+            //val x = Math.toDegrees(values[1].toDouble()).toFloat()
             // y轴的偏转角度
-            val y = values[2].toDouble()
+            //val y = Math.toDegrees(values[2].toDouble()).toFloat()
 
-            Log.d("mAcceleValues", "x:${x} y:${y}  z:$z")
+            val degreeZ = Math.toDegrees(values[0].toDouble()).toInt()
+            val degreeX = Math.toDegrees(values[1].toDouble()).toInt()
+            val degreeY = Math.toDegrees(values[2].toDouble()).toInt()
+            log("x:${degreeX},y:${degreeY},z:${degreeZ}")
+            calculateScroll(degreeX,degreeY,degreeZ)
         }
 
         override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
         }
     }
+
+
 
     private var hasInit = false
     private fun initSensor(){
@@ -257,11 +267,11 @@ class Layout3D : View {
 
         // 重力传感器
         val acceleSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-        sensorManager.registerListener(listener, acceleSensor, SensorManager.SENSOR_DELAY_GAME)
+        sensorManager.registerListener(listener, acceleSensor, SensorManager.SENSOR_DELAY_NORMAL)
 
         // 地磁场传感器
         val magneticSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
-        sensorManager.registerListener(listener, magneticSensor, SensorManager.SENSOR_DELAY_GAME)
+        sensorManager.registerListener(listener, magneticSensor, SensorManager.SENSOR_DELAY_NORMAL)
 
         hasInit = true
     }
@@ -283,5 +293,51 @@ class Layout3D : View {
         log("createImageView: ${imageView.measuredHeight} * ${imageView.measuredWidth}")
         return imageView
     }
+
+
+    private fun calculateScroll(x: Int, y: Int, z: Int) {
+        var scrollY = 0
+        var scrollX= 0
+
+        //除去一下特殊的角度
+        //if (abs(x)==180 || abs(x)==90 || abs(y)==180 || abs(y)==90) return
+        //if (abs(y) > 90) return
+        //if (x !in -90 until 45) return
+
+        if (y in -90 until 0){
+            //从右向左旋转
+            //x值增加
+            scrollX = ((y/180.0)*topDistance).toInt()
+            this@Layout3D.scrollX = abs(scrollX)
+        }else if (y in 0 until 90){
+            //从左向右旋转
+            //x值减少
+            scrollX = ((y/180.0)*topDistance).toInt()
+            this@Layout3D.scrollX = -abs(scrollX)
+        }
+
+
+        if (abs(z) <= 90){
+/*            scrollY = ((x/180.0)*topDistance/2).toInt()
+            this@Layout3D.scrollY = scrollY*/
+        }else{
+            scrollY = ((x/180.0)*topDistance/2).toInt()
+            this@Layout3D.scrollY = -scrollY
+        }
+
+        lastX = x
+        lastY = y
+        lastZ = z
+
+        //if (abs((abs(x)-90)) < 10) this@Layout3D.scrollY = 0
+        //if (abs((abs(y)-90)) < 10) this@Layout3D.scrollX = 0
+
+        if(abs(x) < 3) this@Layout3D.scrollY = 0
+        if(abs(y) < 3) this@Layout3D.scrollX = 0
+
+        log("onSensorChanged,scrollX:${scrollX},scrollY:${scrollY},x:${x} y:${y}")
+        invalidate()
+    }
+
 
 }
