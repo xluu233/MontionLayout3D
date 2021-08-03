@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.example.montionlayout3d.MainViewModel
 import com.example.montionlayout3d.R
-import com.example.montionlayout3d.SensorUtil
 import com.example.montionlayout3d.databinding.FragmentMotionBinding
 
 class MotionFragment : Fragment() {
@@ -30,7 +29,6 @@ class MotionFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         binding.viewmodel = viewModel
-        binding.sensor = SensorUtil
         binding.lifecycleOwner = requireActivity()
         initClick()
     }

@@ -20,7 +20,6 @@
         layout3d:MiddleLayerBottom="70dp"
         layout3d:MiddleLayerLeft="300dp"
         layout3d:MiddleLayerRight="340dp"
-
         layout3d:TopLayerTop="50dp"
         layout3d:TopLayerBottom="200dp"
         layout3d:TopLayerLeft="20dp"
@@ -30,21 +29,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <!--
-        layout3d:MiddleLayer="@drawable/star1"
-        layout3d:BottomLayer="@drawable/back"
-        -->
-<!--    <com.example.montionlayout3d.view.Circle
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="24dp"
-        android:background="@color/purple_200"
-        circle:alpha_c="101"
-        circle:radius_c="50dp"
-        circle:color_c="@color/teal_200"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/vg3D" />-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

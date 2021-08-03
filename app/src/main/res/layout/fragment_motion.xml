@@ -8,9 +8,6 @@
             name="viewmodel"
             type="com.example.montionlayout3d.MainViewModel" />
 
-        <variable
-            name="sensor"
-            type="com.example.montionlayout3d.SensorUtil" />
 
     </data>
 
@@ -28,11 +25,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:showPaths="true">
-
-            <!--app:progress="@{viewmodel.progress}"-->
-            <!--
-            app:SensorX="@{sensor.x}"
-            app:SensorY="@{sensor.y}"-->
 
             <ImageView
                 android:id="@+id/back_1"
@@ -60,10 +52,6 @@
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
                 android:src="@drawable/star1"/>
-
-<!--            <androidx.constraintlayout.widget.Guideline
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"/>-->
 
         </androidx.constraintlayout.motion.widget.MotionLayout>
 

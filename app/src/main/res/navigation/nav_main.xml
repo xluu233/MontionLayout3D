@@ -15,6 +15,9 @@
         <action
             android:id="@+id/action_mainFragment_to_viewFragment"
             app:destination="@id/viewFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_viewFragment2"
+            app:destination="@id/viewFragment2" />
     </fragment>
 
     <fragment
@@ -25,6 +28,10 @@
         android:id="@+id/viewFragment"
         android:name="com.example.montionlayout3d.ui.ViewFragment"
         android:label="ViewFragment" />
+    <fragment
+        android:id="@+id/viewFragment2"
+        android:name="com.example.montionlayout3d.ui.ViewFragment2"
+        android:label="ViewFragment2" />
 
 
 </navigation>

@@ -1,5 +1,10 @@
 package com.example.montionlayout3d.ui
 
+import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,6 +16,8 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.montionlayout3d.MainViewModel
 import com.example.montionlayout3d.R
 import com.example.montionlayout3d.databinding.FragmentMainBinding
+import com.example.montionlayout3d.view.Layout3D
+import kotlin.math.abs
 
 class MainFragment : Fragment() {
 
@@ -43,7 +50,11 @@ class MainFragment : Fragment() {
             navigate(R.id.action_mainFragment_to_viewFragment)
         }
 
+        binding.button3.setOnClickListener {
+            navigate(R.id.action_mainFragment_to_viewFragment2)
+        }
     }
+
 
 
 
