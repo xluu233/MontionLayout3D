@@ -1,6 +1,5 @@
 package com.example.montionlayout3d.view
 
-import android.R.attr
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
@@ -108,9 +107,9 @@ class Layout3D : FrameLayout {
     private var topRight = 0
 
 
-    var topImageView :ImageView ?= null
-    var middleImageView :ImageView ?= null
-    var bottomImageView :ImageView ?= null
+//    var topImageView :ImageView ?= null
+//    var middleImageView :ImageView ?= null
+//    var bottomImageView :ImageView ?= null
 
     private var topLayerHeight:Int = 0
     private var topLayerWidth:Int = 0
@@ -170,6 +169,20 @@ class Layout3D : FrameLayout {
 
         mTypedArray.recycle() //回收，回收之后属性集attay不可用
 
+        topDrawable?.let {
+            log("add top image")
+            addView(createImageView(it))
+        }
+
+//        topImageView = topDrawable?.let {
+//            createImageView(it)
+//        }
+//        middleImageView = middleDrawable?.let {
+//            createImageView(it)
+//        }
+//        bottomImageView = bottomDrawable?.let {
+//            createImageView(it)
+//        }
     }
 
 
@@ -179,21 +192,7 @@ class Layout3D : FrameLayout {
         if (canvas==null) return
         //log("onDraw")
 
-
-/*        topImageView = topDrawable?.let {
-            createImageView(it)
-        }
-        middleImageView = middleDrawable?.let {
-            createImageView(it)
-        }
-        bottomImageView = bottomDrawable?.let {
-            createImageView(it)
-        }
-
-        topImageView?.background = topDrawable
-
-        topImageView?.draw(canvas)*/
-
+/*
 
         bottomDrawable?.let {
             //设置位图左上角坐标（前两个参数）和绘制在View上的位图的宽度和高度（后两个参数）
@@ -214,7 +213,23 @@ class Layout3D : FrameLayout {
         }
         scaleX = 1.3f
         scaleY = 1.3f
+*/
 
+
+
+
+//        topImageView?.let {
+//            log("add top image")
+//            addView(it)
+//        }
+/*        middleImageView?.let {
+            log("add middle image")
+            addView(it)
+        }
+        bottomImageView?.let {
+            log("add bottom image")
+            addView(it)
+        }*/
 
 
         log("onDraw,x:${this.x},y:${this.y},scrollX:${this.scrollX},scrollY:${this.scrollY}")
@@ -222,7 +237,7 @@ class Layout3D : FrameLayout {
 
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        initSensor()
+        //initSensor()
 
         val height = height
         val width = width
@@ -235,6 +250,7 @@ class Layout3D : FrameLayout {
 
         centerPoint.x = (measureWidth/2).toFloat()
         centerPoint.y = (measureHeight/2).toFloat()
+
 
         log("height${height},width$width,measureHeight${measureHeight},measureWidth$measureWidth")
     }
@@ -296,15 +312,15 @@ class Layout3D : FrameLayout {
 
     @Synchronized
     private fun createImageView(drawable: Drawable):ImageView{
-//        val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-//        val layout = inflater.inflate(R.layout.item, null)
+        //val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        //val layout = inflater.inflate(R.layout.item, null)
 //        val imageView: ImageView = layout.findViewById<ImageView>(R.id.image_3d)
-//        val imageView = inflater.inflate(R.layout.item, null) as ImageView
+       // val imageView = inflater.inflate(R.layout.item, null) as ImageView
 
 
         val imageView = ImageView(context)
-        //val params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        val params = ViewGroup.LayoutParams(100.dp.toInt(), 100.dp.toInt())
+        val params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        //val params = ViewGroup.LayoutParams(100.dp.toInt(), 100.dp.toInt())
         imageView.apply {
             layoutParams = params
             scaleType = ImageView.ScaleType.FIT_CENTER
