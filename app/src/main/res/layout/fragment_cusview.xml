@@ -15,7 +15,7 @@
         android:background="@color/titi"
         app:TopLayer="@drawable/circle"
         app:MiddleLayer="@drawable/star1"
-        app:BottomLayer="@drawable/back_2"
+        app:BottomLayer="@drawable/back"
         layout3d:MiddleLayerTop="30dp"
         layout3d:MiddleLayerBottom="70dp"
         layout3d:MiddleLayerLeft="300dp"

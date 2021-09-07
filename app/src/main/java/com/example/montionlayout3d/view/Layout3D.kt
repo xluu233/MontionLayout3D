@@ -233,8 +233,6 @@ class Layout3D : ViewGroup{
         hasInit = true
     }
 
-
-    //,left: Int,top: Int,right: Int,bottom: Int
     class SlideImageView(drawable: Drawable,context: Context,parent:ViewGroup) : AppCompatImageView(context){
         init {
             background = drawable
@@ -251,6 +249,23 @@ class Layout3D : ViewGroup{
             parent.addView(this)
         }
     }
+
+    @Synchronized
+    private fun createImageView(drawable: Drawable):ImageView{
+        val imageView = ImageView(context)
+        val params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        //val params = ViewGroup.LayoutParams(100.dp.toInt(), 100.dp.toInt())
+        imageView.apply {
+            layoutParams = params
+            scaleType = ImageView.ScaleType.FIT_CENTER
+            adjustViewBounds = true
+            background = drawable
+        }
+
+        log("createImageView: ${imageView.measuredHeight} * ${imageView.measuredWidth}")
+        return imageView
+    }
+
 
 
     private fun calculateScroll(x: Int, y: Int, z: Int) {
