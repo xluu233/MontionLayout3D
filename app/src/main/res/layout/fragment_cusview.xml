@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:circle="http://schemas.android.com/apk/res-auto"
-    xmlns:layout3d="http://schemas.android.com/apk/res-auto"
-    >
+    xmlns:layout3d="http://schemas.android.com/apk/res-auto">
 
 
     <com.example.montionlayout3d.view.Layout3D
@@ -16,7 +15,7 @@
         android:background="@color/titi"
         app:TopLayer="@drawable/circle"
         app:MiddleLayer="@drawable/star1"
-        app:BottomLayer="@drawable/back"
+        app:BottomLayer="@drawable/back_2"
         layout3d:MiddleLayerTop="30dp"
         layout3d:MiddleLayerBottom="70dp"
         layout3d:MiddleLayerLeft="300dp"
@@ -28,16 +27,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-
-    <FrameLayout
-        android:id="@+id/frameLayout"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_marginTop="32dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/vg3D" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,8 +2,7 @@ package com.example.montionlayout3d.view
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.PointF
+import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -14,21 +13,35 @@ import android.util.Log
 import android.util.TypedValue
 import android.view.ViewConfiguration
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.Scroller
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.ViewConfigurationCompat
 import com.example.montionlayout3d.R
 import kotlin.math.abs
 
+val Int.sp get() = TypedValue.applyDimension(
+    TypedValue.COMPLEX_UNIT_SP,
+    this.toFloat(),
+    Resources.getSystem().displayMetrics
+)
+val Int.dp get() = TypedValue.applyDimension(
+    TypedValue.COMPLEX_UNIT_DIP,
+    this.toFloat(),
+    Resources.getSystem().displayMetrics
+)
+val Float.dp get() = TypedValue.applyDimension(
+    TypedValue.COMPLEX_UNIT_DIP,
+    this,
+    Resources.getSystem().displayMetrics
+)
+val Float.sp get() = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_SP, this,
+        Resources.getSystem().displayMetrics
+)
 
-/**
- * @ClassName Layout3D
- * @Description TODO
- * @Author AlexLu_1406496344@qq.com
- * @Date 2021/7/30 9:29
- */
-class Layout3D : FrameLayout {
+
+class Layout3D : ViewGroup{
 
     constructor(context: Context) : super(context)
 
@@ -37,28 +50,13 @@ class Layout3D : FrameLayout {
     }
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
-            context,
-            attrs,
-            defStyleAttr
+        context,
+        attrs,
+        defStyleAttr
     ) {
         init(attrs)
     }
 
-    val Int.sp get() = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_SP,
-            this.toFloat(),
-            context.resources.displayMetrics
-    )
-    val Float.dp get() = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            this,
-            context.resources.displayMetrics
-    )
-    val Int.dp get() = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            this.toFloat(),
-            context.resources.displayMetrics
-    )
 
     companion object{
         const val TAG = "Layout3D"
@@ -73,11 +71,6 @@ class Layout3D : FrameLayout {
 
 
     private lateinit var scroller:Scroller
-    //布局中心点
-    private val centerPoint:PointF = PointF(0f, 0f)
-    //parent view宽高
-    private var viewHeight:Int = 0
-    private var viewWidth:Int = 0
 
     //上-中-下 层资源
     private var topDrawable:Drawable ?= null
@@ -89,10 +82,8 @@ class Layout3D : FrameLayout {
     private var middleSlidingEnable:Boolean = true
     private var bottomSlidingEnable:Boolean = true
 
-    //上中下层最大移动距离
-    private var topDistance:Float = 60.dp
-    private var middleDistance:Float = 40.dp
-    private var bottomDistance:Float = 20.dp
+    //最大移动距离
+    private var slideDistance:Float = 60.dp
 
     //中层图片坐标
     private var middleTop = 0
@@ -107,9 +98,9 @@ class Layout3D : FrameLayout {
     private var topRight = 0
 
 
-//    var topImageView :ImageView ?= null
-//    var middleImageView :ImageView ?= null
-//    var bottomImageView :ImageView ?= null
+    var topImageView :ImageView ?= null
+    var middleImageView :ImageView ?= null
+    var bottomImageView :ImageView ?= null
 
     private var topLayerHeight:Int = 0
     private var topLayerWidth:Int = 0
@@ -137,11 +128,8 @@ class Layout3D : FrameLayout {
         bottomSlidingEnable = mTypedArray.getBoolean(R.styleable.layout3d_BottomSlidingEnable, true)
         log("topEnable:${topSlidingEnable},middleEnable:${middleSlidingEnable},bottomEnable:${bottomSlidingEnable}")
 
-
-        topDistance = mTypedArray.getDimension(R.styleable.layout3d_TopSlide, topDistance)
-        middleDistance = mTypedArray.getDimension(R.styleable.layout3d_MiddleSlide, middleDistance)
-        bottomDistance = mTypedArray.getDimension(R.styleable.layout3d_BottomSlide, bottomDistance)
-        log("topDistance:${topDistance},middleDistance:${middleDistance},bottomDistance:${bottomDistance}")
+        slideDistance = mTypedArray.getDimension(R.styleable.layout3d_SlideDistance, slideDistance)
+        log("slideDistance:${slideDistance}")
 
         middleTop = mTypedArray.getDimension(R.styleable.layout3d_MiddleLayerTop, 0f).toInt()
         middleBottom = mTypedArray.getDimension(
@@ -161,99 +149,34 @@ class Layout3D : FrameLayout {
         topRight = mTypedArray.getDimension(R.styleable.layout3d_TopLayerRight, 0f).toInt()
         log("top-margin,top:${topTop},bottom:$topBottom,left:${topLeft},right:${topRight}")
 
-//        topLayerHeight = mTypedArray.getDimension(R.styleable.layout3d_TopLayerHeight, 0f).toInt()
-//        topLayerWidth = mTypedArray.getDimension(R.styleable.layout3d_TopLayerWidth, 0f).toInt()
-//        middleLayerHeight = mTypedArray.getDimension(R.styleable.layout3d_MiddleLayerHeight, 0f).toInt()
-//        middleLayerWidth = mTypedArray.getDimension(R.styleable.layout3d_MiddleLayerWidth, 0f).toInt()
-//        log("drawable xy,top:$topLayerWidth * $topLayerHeight,middle:$middleLayerWidth * $middleLayerHeight")
-
         mTypedArray.recycle() //回收，回收之后属性集attay不可用
 
-        topDrawable?.let {
-            log("add top image")
-            addView(createImageView(it))
-        }
-
-//        topImageView = topDrawable?.let {
-//            createImageView(it)
-//        }
-//        middleImageView = middleDrawable?.let {
-//            createImageView(it)
-//        }
-//        bottomImageView = bottomDrawable?.let {
-//            createImageView(it)
-//        }
-    }
-
-
-    @SuppressLint("DrawAllocation")
-    override fun onDraw(canvas: Canvas?) {
-        super.onDraw(canvas)
-        if (canvas==null) return
-        //log("onDraw")
-
-/*
-
         bottomDrawable?.let {
-            //设置位图左上角坐标（前两个参数）和绘制在View上的位图的宽度和高度（后两个参数）
-            it.setBounds(0, 0, viewWidth, viewHeight)
-            it.draw(canvas)
+            //createImageView(it)
+            bottomImageView = SlideImageView(it,context,this)
         }
-
         middleDrawable?.let {
-            it.setBounds(middleLeft, middleTop, middleRight, middleBottom)
-            it.draw(canvas)
+            //createImageView(it)
+            middleImageView = SlideImageView(it,context,this)
         }
-
         topDrawable?.let {
-            //it.intrinsicWidth,it.intrinsicHeight代表图片像素 3278,3288
-            //log("intrinsicWidth:${it.intrinsicWidth},${it.intrinsicHeight}")
-            it.setBounds(topLeft, topTop, topRight, topBottom)
-            it.draw(canvas)
+            //createImageView(it)
+            topImageView = SlideImageView(it,context,this)
         }
-        scaleX = 1.3f
-        scaleY = 1.3f
-*/
-
-
-
-
-//        topImageView?.let {
-//            log("add top image")
-//            addView(it)
-//        }
-/*        middleImageView?.let {
-            log("add middle image")
-            addView(it)
-        }
-        bottomImageView?.let {
-            log("add bottom image")
-            addView(it)
-        }*/
-
-
-        log("onDraw,x:${this.x},y:${this.y},scrollX:${this.scrollX},scrollY:${this.scrollY}")
+        initSensor()
     }
 
-
-    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        //initSensor()
-
-        val height = height
-        val width = width
-
-        val measureHeight = measuredHeight
-        val measureWidth = measuredWidth
-
-        viewHeight = measureHeight
-        viewWidth = measureWidth
-
-        centerPoint.x = (measureWidth/2).toFloat()
-        centerPoint.y = (measureHeight/2).toFloat()
-
-
-        log("height${height},width$width,measureHeight${measureHeight},measureWidth$measureWidth")
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
+
+    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+        log("onLayout")
+        bottomImageView?.layout(0,0,measuredWidth,measuredHeight)
+        middleImageView?.layout(middleLeft,middleTop,middleRight,middleBottom)
+        topImageView?.layout(topLeft,topTop,topRight,topBottom)
+    }
+
 
 
     private var mAcceleValues : FloatArray ?= null
@@ -310,39 +233,29 @@ class Layout3D : FrameLayout {
         hasInit = true
     }
 
-    @Synchronized
-    private fun createImageView(drawable: Drawable):ImageView{
-        //val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        //val layout = inflater.inflate(R.layout.item, null)
-//        val imageView: ImageView = layout.findViewById<ImageView>(R.id.image_3d)
-       // val imageView = inflater.inflate(R.layout.item, null) as ImageView
 
-
-        val imageView = ImageView(context)
-        val params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        //val params = ViewGroup.LayoutParams(100.dp.toInt(), 100.dp.toInt())
-        imageView.apply {
-            layoutParams = params
-            scaleType = ImageView.ScaleType.FIT_CENTER
-            adjustViewBounds = true
+    //,left: Int,top: Int,right: Int,bottom: Int
+    class SlideImageView(drawable: Drawable,context: Context,parent:ViewGroup) : AppCompatImageView(context){
+        init {
             background = drawable
+            //setBackgroundDrawable(drawable)
+            layoutParams = MarginLayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
+                leftMargin = 100
+                rightMargin = 100
+                topMargin = 100
+                bottomMargin = 100
+            }
+            scaleType = ScaleType.CENTER_CROP
+            fitsSystemWindows = true
+            isClickable = true
+            parent.addView(this)
         }
-
-        log("createImageView: ${imageView.measuredHeight} * ${imageView.measuredWidth}")
-        return imageView
     }
 
 
-    var lastX = 0
-    var lastY = 0
-    var lastZ = 0
-
     private fun calculateScroll(x: Int, y: Int, z: Int) {
-        log("last x:$lastX , y:$lastY ,z:$lastZ")
-        var scrollY = 0
-        var scrollX = 0
-
-        var addY = 0
+        var deltaY = 0
+        var deltaX = 0
 
         //除去一下特殊的角度
         //if (abs(x)==180 || abs(x)==90 || abs(y)==180 || abs(y)==90) return
@@ -352,69 +265,54 @@ class Layout3D : FrameLayout {
             if (y in -180 until 0){
                 //从右向左旋转
                 //x值增加
-                scrollX = abs(((y / 180.0) * topDistance).toInt())
+                deltaX = abs(((y / 180.0) * slideDistance).toInt())
             }else if (y in 0 until 180){
                 //从左向右旋转
-                scrollX = -abs(((y / 180.0) * topDistance).toInt())
+                deltaX = -abs(((y / 180.0) * slideDistance).toInt())
             }
         }
-
-
-
-        //X轴逆时针方向旋转，x值变化为0==90==0==-90==0
-        //对应Z轴变化 100==0==-80==-130==100
-/*        if (z >= 0) {
-            //左半区
-            if (x >= lastX){
-                //逆时针方向
-                addY = -abs((((x-lastX)/180.0)*topDistance).toInt())
-            }else{
-                addY = abs((((x-lastX)/180.0)*topDistance).toInt())
-            }
-        }else{
-            //右边区
-            if (x < lastX){
-                //逆时针方向
-                addY = abs((((x-lastX)/180.0)*topDistance).toInt())
-            }else{
-                addY = -abs((((x-lastX)/180.0)*topDistance).toInt())
-            }
-        }*/
-
-/*        if (x in -90 until 90){
-            if (x > lastX){
-                //逆时针
-                //scrollY = abs((((x)/90.0)*topDistance).toInt())
-                addY += 3
-            }else if (x < lastX){
-                //顺时针
-                //scrollY = -abs((((x)/90.0)*topDistance).toInt())
-                addY -= 3
-            }else{
-                addY = 0
-            }
-        }*/
 
         if (x in -90 until 0){
-            scrollY = abs((((x) / 180.0) * bottomDistance).toInt())
+            deltaY = abs((((x) / 180.0) * slideDistance).toInt())
         }else if (x in 0 until 90){
-            scrollY = -abs((((x) / 180.0) * bottomDistance).toInt())
+            deltaY = -abs((((x) / 180.0) * slideDistance).toInt())
         }
 
-        lastX = x
-        lastY = y
-        lastZ = z
+        if (abs(deltaX) < 5) deltaX=0
+        if (abs(deltaY) < 5) deltaY=0
+        scroller.startScroll(deltaX,deltaY, (this.x+deltaX).toInt(),(this.y+deltaY).toInt(),1000)
+        invalidate()
+        log("onSensorChanged,scrollX:${deltaX},scrollY:${deltaY},x:${x} y:${y}")
+    }
 
-        if(abs(x) < 5) this@Layout3D.scrollY = 0
-        if(abs(y) < 5) this@Layout3D.scrollX = 0
 
+    override fun computeScroll() {
+        super.computeScroll()
+        //判断Scroller是否执行完毕
+        if (scroller.computeScrollOffset()) {
+            val slideX = scroller.currX
+            val slideY = scroller.currY
 
-        //this@Layout3D.scrollY += addY
-        this@Layout3D.scrollX = scrollX
-        this@Layout3D.scrollY = scrollY
+            val bottomSlideX = slideX/3
+            val bottomSlideY = slideY/3
 
-        log("scrollY:${this@Layout3D.scrollY}")
-        //log("onSensorChanged,scrollX:${scrollX},scrollY:${scrollY},x:${x} y:${y}")
+            val middleSlideX = slideX/2
+            val middleSlideY = slideY/2
+
+            val topSlideX = -slideX
+            val topSlideY = -slideY
+
+            bottomImageView?.layout(0+bottomSlideX,0+bottomSlideY,measuredWidth+bottomSlideX,measuredHeight+bottomSlideY)
+            //middleImageView?.layout(middleLeft+middleSlideX,middleTop+middleSlideY,middleRight+middleSlideX,middleBottom+middleSlideY)
+            topImageView?.layout(topLeft+topSlideX,topTop+topSlideY,topRight+topSlideX,topBottom+topSlideY)
+
+            /*(bottomImageView as View).scrollTo(
+                scroller.currX,
+                scroller.currY
+            )*/
+            //通过重绘来不断调用computeScroll
+            invalidate()
+        }
     }
 
 }

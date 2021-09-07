@@ -9,9 +9,7 @@
         <attr name="BottomLayer" format="reference" />
 
         <!--上中下层滑动距离-->
-        <attr name="TopSlide" format="dimension"/>
-        <attr name="MiddleSlide" format="dimension"/>
-        <attr name="BottomSlide" format="dimension"/>
+        <attr name="SlideDistance" format="dimension"/>
 
         <!--上中下层是否滑动-->
         <attr name="TopSlidingEnable" format="boolean"/>
